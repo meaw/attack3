@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="82802ab.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="amd_imc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="archtest.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="at45db.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atahpt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atapromise.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atavia.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bitbang_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board_enable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="buspirate_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cbtable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ch341a_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="chipset_enable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cli_classic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cli_common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cli_output.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dediprog.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dmi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="drkaiser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dummyflasher.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="en29lv640b.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="flashchips.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="flashrom.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ft2232_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gfxnvidia.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="helpers.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hwaccess.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ich_descriptors.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ichspi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="internal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="it85spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="it87spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="it8212.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="jedec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="layout.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linux_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mcp6x_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mstarddc_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nic3com.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nicintel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nicintel_eeprom.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nicintel_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nicnatsemi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="nicrealtek.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ogp_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opaque.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pcidev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="physmap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pickit2_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pony_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="print.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="print_wiki.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="processor_enable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="programmer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rayer_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="satamv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="satasii.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sb600spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="serial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="serprog.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sfdp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spi25.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spi25_statusreg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sst_fwhub.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sst28sf040.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sst49lfxxxc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stm50.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="udelay.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="usbblaster_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="w29ee011.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="w39.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wbsio_spi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="chipdrivers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="coreboot_tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="flash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="flashchips.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hwaccess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ich_descriptors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="os.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="programmer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="serprog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="spi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

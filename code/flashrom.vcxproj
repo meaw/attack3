@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4E76F7AF-88AB-4D94-B050-61E9C932B79C}</ProjectGuid>
+    <RootNamespace>flashrom</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>Code</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="82802ab.c" />
+    <ClCompile Include="amd_imc.c" />
+    <ClCompile Include="archtest.c" />
+    <ClCompile Include="at45db.c" />
+    <ClCompile Include="atahpt.c" />
+    <ClCompile Include="atapromise.c" />
+    <ClCompile Include="atavia.c" />
+    <ClCompile Include="bitbang_spi.c" />
+    <ClCompile Include="board_enable.c" />
+    <ClCompile Include="buspirate_spi.c" />
+    <ClCompile Include="cbtable.c" />
+    <ClCompile Include="ch341a_spi.c" />
+    <ClCompile Include="chipset_enable.c" />
+    <ClCompile Include="cli_classic.c" />
+    <ClCompile Include="cli_common.c" />
+    <ClCompile Include="cli_output.c" />
+    <ClCompile Include="dediprog.c" />
+    <ClCompile Include="dmi.c" />
+    <ClCompile Include="drkaiser.c" />
+    <ClCompile Include="dummyflasher.c" />
+    <ClCompile Include="en29lv640b.c" />
+    <ClCompile Include="flashchips.c" />
+    <ClCompile Include="flashrom.c" />
+    <ClCompile Include="ft2232_spi.c" />
+    <ClCompile Include="gfxnvidia.c" />
+    <ClCompile Include="helpers.c" />
+    <ClCompile Include="hwaccess.c" />
+    <ClCompile Include="ichspi.c" />
+    <ClCompile Include="ich_descriptors.c" />
+    <ClCompile Include="internal.c" />
+    <ClCompile Include="it8212.c" />
+    <ClCompile Include="it85spi.c" />
+    <ClCompile Include="it87spi.c" />
+    <ClCompile Include="jedec.c" />
+    <ClCompile Include="layout.c" />
+    <ClCompile Include="linux_spi.c" />
+    <ClCompile Include="mcp6x_spi.c" />
+    <ClCompile Include="mstarddc_spi.c" />
+    <ClCompile Include="nic3com.c" />
+    <ClCompile Include="nicintel.c" />
+    <ClCompile Include="nicintel_eeprom.c" />
+    <ClCompile Include="nicintel_spi.c" />
+    <ClCompile Include="nicnatsemi.c" />
+    <ClCompile Include="nicrealtek.c" />
+    <ClCompile Include="ogp_spi.c" />
+    <ClCompile Include="opaque.c" />
+    <ClCompile Include="pcidev.c" />
+    <ClCompile Include="physmap.c" />
+    <ClCompile Include="pickit2_spi.c" />
+    <ClCompile Include="pony_spi.c" />
+    <ClCompile Include="print.c" />
+    <ClCompile Include="print_wiki.c" />
+    <ClCompile Include="processor_enable.c" />
+    <ClCompile Include="programmer.c" />
+    <ClCompile Include="rayer_spi.c" />
+    <ClCompile Include="satamv.c" />
+    <ClCompile Include="satasii.c" />
+    <ClCompile Include="sb600spi.c" />
+    <ClCompile Include="serial.c" />
+    <ClCompile Include="serprog.c" />
+    <ClCompile Include="sfdp.c" />
+    <ClCompile Include="spi.c" />
+    <ClCompile Include="spi25.c" />
+    <ClCompile Include="spi25_statusreg.c" />
+    <ClCompile Include="sst28sf040.c" />
+    <ClCompile Include="sst49lfxxxc.c" />
+    <ClCompile Include="sst_fwhub.c" />
+    <ClCompile Include="stm50.c" />
+    <ClCompile Include="udelay.c" />
+    <ClCompile Include="usbblaster_spi.c" />
+    <ClCompile Include="w29ee011.c" />
+    <ClCompile Include="w39.c" />
+    <ClCompile Include="wbsio_spi.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="chipdrivers.h" />
+    <ClInclude Include="coreboot_tables.h" />
+    <ClInclude Include="flash.h" />
+    <ClInclude Include="flashchips.h" />
+    <ClInclude Include="hwaccess.h" />
+    <ClInclude Include="ich_descriptors.h" />
+    <ClInclude Include="os.h" />
+    <ClInclude Include="platform.h" />
+    <ClInclude Include="programmer.h" />
+    <ClInclude Include="serprog.h" />
+    <ClInclude Include="spi.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
