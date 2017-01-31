@@ -11874,7 +11874,38 @@ const struct flashchip flashchips[] = {
 		.read		= spi_chip_read, /* Fast read (0x0B) and multi I/O supported */
 		.voltage	= {2700, 3600},
 	},
-
+	{
+		.vendor = "Spansion",   //added by DJSC
+		.name = "S25FL512S", /* uniform 256 kB sectors */
+		.bustype = BUS_SPI,
+		.manufacture_id = SPANSION_ID,
+		.model_id = SPANSION_S25FL512,
+		.total_size = 65536,
+		.page_size = 512,
+		/* supports 4B addressing */
+		/* OTP: 1024B total, 32B reserved; read 0x4B; write 0x42 */
+		.feature_bits = FEATURE_WRSR_WREN | FEATURE_OTP,
+		.tested = TEST_UNTESTED,
+		.probe = probe_spi_rdid,
+		.probe_timing = TIMING_ZERO,
+		.block_erasers = {
+			{
+				.eraseblocks = { { 256 * 1024, 64 } },  //sectorerase
+				.block_erase = spi_block_erase_d8,
+			},{
+				.eraseblocks = { { 65536 * 1024, 1 } },   //bulkerase
+				.block_erase = spi_block_erase_60,
+			},{
+				.eraseblocks = { { 65536 * 1024, 1 } },  //bulkerase
+				.block_erase = spi_block_erase_c7,
+			}
+		},
+			.printlock = spi_prettyprint_status_register_bp2_ep_srwd, /* TODO: SR2 and many others */
+			.unlock = spi_disable_blockprotect_bp2_srwd, /* TODO: various other locks */
+			.write = spi_chip_write_256, /* Multi I/O supported */
+			.read = spi_chip_read, /* Fast read (0x0B) and multi I/O supported */
+			.voltage = { 2700, 3600 },
+	},
 	{
 		.vendor		= "Spansion",
 		.name		= "S25FL129P......0", /* hybrid: 32 (top or bottom) 4 kB sub-sectors + 64 kB sectors */

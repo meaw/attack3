@@ -793,7 +793,7 @@ int spi_block_erase_62(struct flashctx *flash, unsigned int addr, unsigned int b
 	return spi_chip_erase_62(flash);
 }
 
-int spi_block_erase_c7(struct flashctx *flash, unsigned int addr,
+int ftspi_block_erase_c7(struct flashctx *flash, unsigned int addr,
 		       unsigned int blocklen)
 {
 	if ((addr != 0) || (blocklen != flash->chip->total_size * 1024)) {
