@@ -1,26 +1,26 @@
 /*
- * This file is part of the flashrom project.
- *
- * Copyright (C) 2009 Carl-Daniel Hailfinger
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- *
- *
- * Header file for flash chip drivers. Included from flash.h.
- * As a general rule, every function listed here should take a pointer to
- * struct flashctx as first parameter.
- */
+* This file is part of the flashrom project.
+*
+* Copyright (C) 2009 Carl-Daniel Hailfinger
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; version 2 of the License.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+*
+*
+* Header file for flash chip drivers. Included from flash.h.
+* As a general rule, every function listed here should take a pointer to
+* struct flashctx as first parameter.
+*/
 
 #ifndef __CHIPDRIVERS_H__
 #define __CHIPDRIVERS_H__ 1
@@ -158,7 +158,7 @@ int printlock_regspace2_block_eraser_1(struct flashctx *flash);
 /* sst28sf040.c */
 int erase_chip_28sf040(struct flashctx *flash, unsigned int addr, unsigned int blocklen);
 int erase_sector_28sf040(struct flashctx *flash, unsigned int address, unsigned int sector_size);
-int write_28sf040(struct flashctx *flash, const uint8_t *buf,unsigned int start, unsigned int len);
+int write_28sf040(struct flashctx *flash, const uint8_t *buf, unsigned int start, unsigned int len);
 int unprotect_28sf040(struct flashctx *flash);
 int protect_28sf040(struct flashctx *flash);
 
@@ -196,6 +196,8 @@ int probe_en29lv640b(struct flashctx *flash);
 int write_en29lv640b(struct flashctx *flash, const uint8_t *buf, unsigned int start, unsigned int len);
 
 /* spi4ba.c */
+int spi_enter_4ba_17(struct flashctx *flash);
+int spi_enter_4ba_17_we(struct flashctx *flash);
 int spi_enter_4ba_b7(struct flashctx *flash);
 int spi_enter_4ba_b7_we(struct flashctx *flash);
 int spi_byte_program_4ba(struct flashctx *flash, unsigned int addr, uint8_t databyte);

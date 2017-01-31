@@ -1,25 +1,25 @@
 /*
- * This file is part of the flashrom project.
- *
- * Copyright (C) 2014 Boris Baykov
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
- */
+* This file is part of the flashrom project.
+*
+* Copyright (C) 2014 Boris Baykov
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; version 2 of the License.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+*/
 
 /*
- * SPI chip driver functions for 4-bytes addressing
- */
+* SPI chip driver functions for 4-bytes addressing
+*/
 
 #include <string.h>
 #include "flash.h"
@@ -35,6 +35,52 @@
 #else
 #define msg_trace(...)
 #endif
+
+
+/* Enter 4-bytes addressing mode (without sending WREN before) */
+int spi_enter_4ba_17(struct flashctx *flash)
+{
+	const unsigned char cmd[JEDEC_ENTER_4_BYTE_ADDR_MODE_OUTSIZE] = { JEDEC_ENTER_4_BYTE_ADDR_MODE };
+
+	msg_trace("-> %s\n", __func__);
+
+	/* Switch to 4-bytes addressing mode  */
+	return spi_send_command(flash, sizeof(cmd), 0, cmd, NULL);
+}
+
+
+/* Enter 4-bytes addressing mode with sending WREN before */
+int spi_enter_4ba_17_we(struct flashctx *flash)
+{
+	int result;
+	struct spi_command cmds[] = {
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_ENTER_4_BYTE_ADDR_MODE_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_ENTER_4_BYTE_ADDR_MODE },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
+
+	msg_trace("-> %s\n", __func__);
+
+	/* Switch to 4-bytes addressing mode  */
+	result = spi_send_multicommand(flash, cmds);
+	if (result) {
+		msg_cerr("%s failed during command execution\n", __func__);
+	}
+	return result;
+}
+
 
 /* Enter 4-bytes addressing mode (without sending WREN before) */
 int spi_enter_4ba_b7(struct flashctx *flash)
@@ -52,22 +98,22 @@ int spi_enter_4ba_b7_we(struct flashctx *flash)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_ENTER_4_BYTE_ADDR_MODE_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_ENTER_4_BYTE_ADDR_MODE },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_ENTER_4_BYTE_ADDR_MODE_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_ENTER_4_BYTE_ADDR_MODE },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s\n", __func__);
 
@@ -81,33 +127,33 @@ int spi_enter_4ba_b7_we(struct flashctx *flash)
 
 /* Program one flash byte from 4-bytes addressing mode */
 int spi_byte_program_4ba(struct flashctx *flash, unsigned int addr,
-				 uint8_t databyte)
+	uint8_t databyte)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BYTE_PROGRAM_OUTSIZE + 1,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BYTE_PROGRAM,
-					(addr >> 24) & 0xff,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff),
-					databyte
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BYTE_PROGRAM_OUTSIZE + 1,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BYTE_PROGRAM,
+			(addr >> 24) & 0xff,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff),
+			databyte
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X)\n", __func__, addr);
 
@@ -121,7 +167,7 @@ int spi_byte_program_4ba(struct flashctx *flash, unsigned int addr,
 
 /* Program flash bytes from 4-bytes addressing mode */
 int spi_nbyte_program_4ba(struct flashctx *flash, unsigned int addr,
-			  const uint8_t *bytes, unsigned int len)
+	const uint8_t *bytes, unsigned int len)
 {
 	int result;
 	unsigned char cmd[(JEDEC_BYTE_PROGRAM_OUTSIZE + 1) - 1 + 256] = {
@@ -132,22 +178,22 @@ int spi_nbyte_program_4ba(struct flashctx *flash, unsigned int addr,
 		(addr >> 0) & 0xff
 	};
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= (JEDEC_BYTE_PROGRAM_OUTSIZE + 1) - 1 + len,
-		.writearr	= cmd,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = (JEDEC_BYTE_PROGRAM_OUTSIZE + 1) - 1 + len,
+			.writearr = cmd,
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + len - 1);
 
@@ -172,7 +218,7 @@ int spi_nbyte_program_4ba(struct flashctx *flash, unsigned int addr,
 
 /* Read flash bytes from 4-bytes addressing mode */
 int spi_nbyte_read_4ba(struct flashctx *flash, unsigned int addr,
-		   uint8_t *bytes, unsigned int len)
+	uint8_t *bytes, unsigned int len)
 {
 	const unsigned char cmd[JEDEC_READ_OUTSIZE + 1] = {
 		JEDEC_READ,
@@ -190,32 +236,32 @@ int spi_nbyte_read_4ba(struct flashctx *flash, unsigned int addr,
 
 /* Erases 4 KB of flash from 4-bytes addressing mode */
 int spi_block_erase_20_4ba(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_SE_OUTSIZE + 1,
-		.writearr	= (const unsigned char[]){
-					JEDEC_SE,
-					(addr >> 24) & 0xff,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_SE_OUTSIZE + 1,
+			.writearr = (const unsigned char[]) {
+		JEDEC_SE,
+			(addr >> 24) & 0xff,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -226,8 +272,8 @@ int spi_block_erase_20_4ba(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 15-800 ms, so wait in 10 ms steps.
-	 */
+	* This usually takes 15-800 ms, so wait in 10 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(10 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -236,32 +282,32 @@ int spi_block_erase_20_4ba(struct flashctx *flash, unsigned int addr,
 
 /* Erases 32 KB of flash from 4-bytes addressing mode */
 int spi_block_erase_52_4ba(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BE_52_OUTSIZE + 1,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BE_52,
-					(addr >> 24) & 0xff,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BE_52_OUTSIZE + 1,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BE_52,
+			(addr >> 24) & 0xff,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -272,8 +318,8 @@ int spi_block_erase_52_4ba(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 100-4000 ms, so wait in 100 ms steps.
-	 */
+	* This usually takes 100-4000 ms, so wait in 100 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(100 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -282,32 +328,32 @@ int spi_block_erase_52_4ba(struct flashctx *flash, unsigned int addr,
 
 /* Erases 64 KB of flash from 4-bytes addressing mode */
 int spi_block_erase_d8_4ba(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BE_D8_OUTSIZE + 1,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BE_D8,
-					(addr >> 24) & 0xff,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BE_D8_OUTSIZE + 1,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BE_D8,
+			(addr >> 24) & 0xff,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -318,8 +364,8 @@ int spi_block_erase_d8_4ba(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 100-4000 ms, so wait in 100 ms steps.
-	 */
+	* This usually takes 100-4000 ms, so wait in 100 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(100 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -331,25 +377,25 @@ int spi_write_extended_address_register(struct flashctx *flash, uint8_t regdata)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_WRITE_EXT_ADDR_REG_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_WRITE_EXT_ADDR_REG,
-					regdata
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_WRITE_EXT_ADDR_REG_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_WRITE_EXT_ADDR_REG,
+			regdata
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (%02X)\n", __func__, regdata);
 
@@ -362,8 +408,8 @@ int spi_write_extended_address_register(struct flashctx *flash, uint8_t regdata)
 }
 
 /* Assign required value of Extended Address Register. This function
-   keeps last value of the register and writes the register if the
-   value has to be changed only. */
+keeps last value of the register and writes the register if the
+value has to be changed only. */
 int set_extended_address_register(struct flashctx *flash, uint8_t data)
 {
 	static uint8_t ext_addr_reg_state; /* memory for last register state */
@@ -383,34 +429,34 @@ int set_extended_address_register(struct flashctx *flash, uint8_t data)
 }
 
 /* Program one flash byte using Extended Address Register
-   from 3-bytes addressing mode */
+from 3-bytes addressing mode */
 int spi_byte_program_4ba_ereg(struct flashctx *flash, unsigned int addr,
-				 uint8_t databyte)
+	uint8_t databyte)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BYTE_PROGRAM_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BYTE_PROGRAM,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff),
-					databyte
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BYTE_PROGRAM_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BYTE_PROGRAM,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff),
+			databyte
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X)\n", __func__, addr);
 
@@ -427,9 +473,9 @@ int spi_byte_program_4ba_ereg(struct flashctx *flash, unsigned int addr,
 }
 
 /* Program flash bytes using Extended Address Register
-   from 3-bytes addressing mode */
+from 3-bytes addressing mode */
 int spi_nbyte_program_4ba_ereg(struct flashctx *flash, unsigned int addr,
-				  const uint8_t *bytes, unsigned int len)
+	const uint8_t *bytes, unsigned int len)
 {
 	int result;
 	unsigned char cmd[JEDEC_BYTE_PROGRAM_OUTSIZE - 1 + 256] = {
@@ -439,22 +485,22 @@ int spi_nbyte_program_4ba_ereg(struct flashctx *flash, unsigned int addr,
 		(addr >> 0) & 0xff
 	};
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BYTE_PROGRAM_OUTSIZE - 1 + len,
-		.writearr	= cmd,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BYTE_PROGRAM_OUTSIZE - 1 + len,
+			.writearr = cmd,
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + len - 1);
 
@@ -482,9 +528,9 @@ int spi_nbyte_program_4ba_ereg(struct flashctx *flash, unsigned int addr,
 }
 
 /* Read flash bytes using Extended Address Register
-   from 3-bytes addressing mode */
+from 3-bytes addressing mode */
 int spi_nbyte_read_4ba_ereg(struct flashctx *flash, unsigned int addr,
-		   uint8_t *bytes, unsigned int len)
+	uint8_t *bytes, unsigned int len)
 {
 	int result;
 	const unsigned char cmd[JEDEC_READ_OUTSIZE] = {
@@ -505,33 +551,33 @@ int spi_nbyte_read_4ba_ereg(struct flashctx *flash, unsigned int addr,
 }
 
 /* Erases 4 KB of flash using Extended Address Register
-   from 3-bytes addressing mode */
+from 3-bytes addressing mode */
 int spi_block_erase_20_4ba_ereg(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_SE_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_SE,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_SE_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_SE,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -546,8 +592,8 @@ int spi_block_erase_20_4ba_ereg(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 15-800 ms, so wait in 10 ms steps.
-	 */
+	* This usually takes 15-800 ms, so wait in 10 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(10 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -555,33 +601,33 @@ int spi_block_erase_20_4ba_ereg(struct flashctx *flash, unsigned int addr,
 }
 
 /* Erases 32 KB of flash using Extended Address Register
-   from 3-bytes addressing mode */
+from 3-bytes addressing mode */
 int spi_block_erase_52_4ba_ereg(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BE_52_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BE_52,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BE_52_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BE_52,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -596,8 +642,8 @@ int spi_block_erase_52_4ba_ereg(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 100-4000 ms, so wait in 100 ms steps.
-	 */
+	* This usually takes 100-4000 ms, so wait in 100 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(100 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -605,33 +651,33 @@ int spi_block_erase_52_4ba_ereg(struct flashctx *flash, unsigned int addr,
 }
 
 /* Erases 64 KB of flash using Extended Address Register
-   from 3-bytes addressing mode */
+from 3-bytes addressing mode */
 int spi_block_erase_d8_4ba_ereg(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BE_D8_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BE_D8,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BE_D8_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BE_D8,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -646,8 +692,8 @@ int spi_block_erase_d8_4ba_ereg(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 100-4000 ms, so wait in 100 ms steps.
-	 */
+	* This usually takes 100-4000 ms, so wait in 100 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(100 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -655,37 +701,37 @@ int spi_block_erase_d8_4ba_ereg(struct flashctx *flash, unsigned int addr,
 }
 
 /* Program one flash byte with 4-bytes address from ANY mode (3-bytes or 4-bytes)
-   JEDEC_BYTE_PROGRAM_4BA (12h) instruction is new for 4-bytes addressing flash chips.
-   The presence of this instruction for an exact chip should be checked
-   by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
+JEDEC_BYTE_PROGRAM_4BA (12h) instruction is new for 4-bytes addressing flash chips.
+The presence of this instruction for an exact chip should be checked
+by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
 int spi_byte_program_4ba_direct(struct flashctx *flash, unsigned int addr,
-				 uint8_t databyte)
+	uint8_t databyte)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BYTE_PROGRAM_4BA_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BYTE_PROGRAM_4BA,
-					(addr >> 24) & 0xff,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff),
-					databyte
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BYTE_PROGRAM_4BA_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BYTE_PROGRAM_4BA,
+			(addr >> 24) & 0xff,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff),
+			databyte
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X)\n", __func__, addr);
 
@@ -698,11 +744,11 @@ int spi_byte_program_4ba_direct(struct flashctx *flash, unsigned int addr,
 }
 
 /* Program flash bytes with 4-bytes address from ANY mode (3-bytes or 4-bytes)
-   JEDEC_BYTE_PROGRAM_4BA (12h) instruction is new for 4-bytes addressing flash chips.
-   The presence of this instruction for an exact chip should be checked
-   by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
+JEDEC_BYTE_PROGRAM_4BA (12h) instruction is new for 4-bytes addressing flash chips.
+The presence of this instruction for an exact chip should be checked
+by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
 int spi_nbyte_program_4ba_direct(struct flashctx *flash, unsigned int addr,
-				  const uint8_t *bytes, unsigned int len)
+	const uint8_t *bytes, unsigned int len)
 {
 	int result;
 	unsigned char cmd[JEDEC_BYTE_PROGRAM_4BA_OUTSIZE - 1 + 256] = {
@@ -713,22 +759,22 @@ int spi_nbyte_program_4ba_direct(struct flashctx *flash, unsigned int addr,
 		(addr >> 0) & 0xff
 	};
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BYTE_PROGRAM_4BA_OUTSIZE - 1 + len,
-		.writearr	= cmd,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BYTE_PROGRAM_4BA_OUTSIZE - 1 + len,
+			.writearr = cmd,
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + len - 1);
 
@@ -752,11 +798,11 @@ int spi_nbyte_program_4ba_direct(struct flashctx *flash, unsigned int addr,
 }
 
 /* Read flash bytes with 4-bytes address from ANY mode (3-bytes or 4-bytes)
-   JEDEC_READ_4BA (13h) instruction is new for 4-bytes addressing flash chips.
-   The presence of this instruction for an exact chip should be checked
-   by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
+JEDEC_READ_4BA (13h) instruction is new for 4-bytes addressing flash chips.
+The presence of this instruction for an exact chip should be checked
+by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
 int spi_nbyte_read_4ba_direct(struct flashctx *flash, unsigned int addr,
-		   uint8_t *bytes, unsigned int len)
+	uint8_t *bytes, unsigned int len)
 {
 	const unsigned char cmd[JEDEC_READ_4BA_OUTSIZE] = {
 		JEDEC_READ_4BA,
@@ -773,36 +819,36 @@ int spi_nbyte_read_4ba_direct(struct flashctx *flash, unsigned int addr,
 }
 
 /* Erase 4 KB of flash with 4-bytes address from ANY mode (3-bytes or 4-bytes)
-   JEDEC_SE_4BA (21h) instruction is new for 4-bytes addressing flash chips.
-   The presence of this instruction for an exact chip should be checked
-   by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
+JEDEC_SE_4BA (21h) instruction is new for 4-bytes addressing flash chips.
+The presence of this instruction for an exact chip should be checked
+by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
 int spi_block_erase_21_4ba_direct(struct flashctx *flash, unsigned int addr,
-				   unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_SE_4BA_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_SE_4BA,
-					(addr >> 24) & 0xff,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_SE_4BA_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_SE_4BA,
+			(addr >> 24) & 0xff,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -813,8 +859,8 @@ int spi_block_erase_21_4ba_direct(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 15-800 ms, so wait in 10 ms steps.
-	 */
+	* This usually takes 15-800 ms, so wait in 10 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(10 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -822,36 +868,36 @@ int spi_block_erase_21_4ba_direct(struct flashctx *flash, unsigned int addr,
 }
 
 /* Erase 32 KB of flash with 4-bytes address from ANY mode (3-bytes or 4-bytes)
-   JEDEC_BE_5C_4BA (5Ch) instruction is new for 4-bytes addressing flash chips.
-   The presence of this instruction for an exact chip should be checked
-   by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
+JEDEC_BE_5C_4BA (5Ch) instruction is new for 4-bytes addressing flash chips.
+The presence of this instruction for an exact chip should be checked
+by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
 int spi_block_erase_5c_4ba_direct(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BE_5C_4BA_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BE_5C_4BA,
-					(addr >> 24) & 0xff,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BE_5C_4BA_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BE_5C_4BA,
+			(addr >> 24) & 0xff,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -862,8 +908,8 @@ int spi_block_erase_5c_4ba_direct(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 100-4000 ms, so wait in 100 ms steps.
-	 */
+	* This usually takes 100-4000 ms, so wait in 100 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(100 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -871,36 +917,36 @@ int spi_block_erase_5c_4ba_direct(struct flashctx *flash, unsigned int addr,
 }
 
 /* Erase 64 KB of flash with 4-bytes address from ANY mode (3-bytes or 4-bytes)
-   JEDEC_BE_DC_4BA (DCh) instruction is new for 4-bytes addressing flash chips.
-   The presence of this instruction for an exact chip should be checked
-   by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
+JEDEC_BE_DC_4BA (DCh) instruction is new for 4-bytes addressing flash chips.
+The presence of this instruction for an exact chip should be checked
+by its datasheet or from SFDP 4-Bytes Address Instruction Table (JESD216B). */
 int spi_block_erase_dc_4ba_direct(struct flashctx *flash, unsigned int addr,
-				   unsigned int blocklen)
+	unsigned int blocklen)
 {
 	int result;
 	struct spi_command cmds[] = {
-	{
-		.writecnt	= JEDEC_WREN_OUTSIZE,
-		.writearr	= (const unsigned char[]){ JEDEC_WREN },
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= JEDEC_BE_DC_4BA_OUTSIZE,
-		.writearr	= (const unsigned char[]){
-					JEDEC_BE_DC_4BA,
-					(addr >> 24) & 0xff,
-					(addr >> 16) & 0xff,
-					(addr >> 8) & 0xff,
-					(addr & 0xff)
-				},
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}, {
-		.writecnt	= 0,
-		.writearr	= NULL,
-		.readcnt	= 0,
-		.readarr	= NULL,
-	}};
+		{
+			.writecnt = JEDEC_WREN_OUTSIZE,
+			.writearr = (const unsigned char[]) { JEDEC_WREN },
+			.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = JEDEC_BE_DC_4BA_OUTSIZE,
+			.writearr = (const unsigned char[]) {
+		JEDEC_BE_DC_4BA,
+			(addr >> 24) & 0xff,
+			(addr >> 16) & 0xff,
+			(addr >> 8) & 0xff,
+			(addr & 0xff)
+	},
+		.readcnt = 0,
+			.readarr = NULL,
+		},{
+			.writecnt = 0,
+			.writearr = NULL,
+			.readcnt = 0,
+			.readarr = NULL,
+		} };
 
 	msg_trace("-> %s (0x%08X-0x%08X)\n", __func__, addr, addr + blocklen - 1);
 
@@ -911,8 +957,8 @@ int spi_block_erase_dc_4ba_direct(struct flashctx *flash, unsigned int addr,
 		return result;
 	}
 	/* Wait until the Write-In-Progress bit is cleared.
-	 * This usually takes 100-4000 ms, so wait in 100 ms steps.
-	 */
+	* This usually takes 100-4000 ms, so wait in 100 ms steps.
+	*/
 	while (spi_read_status_register(flash) & SPI_SR_WIP)
 		programmer_delay(100 * 1000);
 	/* FIXME: Check the status register for errors. */
@@ -920,9 +966,9 @@ int spi_block_erase_dc_4ba_direct(struct flashctx *flash, unsigned int addr,
 }
 
 /* Selector for 4k eraser that chooses between 4-bytes addressing mode
-   and use of Extended Address Register from 3-bytes addressing mode */
+and use of Extended Address Register from 3-bytes addressing mode */
 int spi_block_erase_20_4ba_selector(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	msg_trace("-> %s\n", __func__);
 
@@ -932,9 +978,9 @@ int spi_block_erase_20_4ba_selector(struct flashctx *flash, unsigned int addr,
 }
 
 /* Selector for 32k eraser that chooses between 4-bytes addressing mode
-   and use of Extended Address Register from 3-bytes addressing mode */
+and use of Extended Address Register from 3-bytes addressing mode */
 int spi_block_erase_52_4ba_selector(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	msg_trace("-> %s\n", __func__);
 
@@ -944,9 +990,9 @@ int spi_block_erase_52_4ba_selector(struct flashctx *flash, unsigned int addr,
 }
 
 /* Selector for 64k eraser that chooses between 4-bytes addressing mode
-   and use of Extended Address Register from 3-bytes addressing mode */
+and use of Extended Address Register from 3-bytes addressing mode */
 int spi_block_erase_d8_4ba_selector(struct flashctx *flash, unsigned int addr,
-		       unsigned int blocklen)
+	unsigned int blocklen)
 {
 	msg_trace("-> %s\n", __func__);
 
@@ -956,13 +1002,13 @@ int spi_block_erase_d8_4ba_selector(struct flashctx *flash, unsigned int addr,
 }
 
 /* Chooser for erase function by instruction opcode for block eraser instructions
-   to work with 4-bytes addressing flash chips. This chooser is called from sfdp.c
-   during parse of 8th & 9th dwords of SFDP Basic Flash Parameter Table */
+to work with 4-bytes addressing flash chips. This chooser is called from sfdp.c
+during parse of 8th & 9th dwords of SFDP Basic Flash Parameter Table */
 erasefunc_t *spi_get_erasefn_from_opcode_4ba(uint8_t opcode)
 {
 	msg_trace("-> %s\n", __func__);
 
-	switch(opcode){
+	switch (opcode) {
 	case 0xff:
 	case 0x00:
 		/* Not specified, assuming "not supported". */
@@ -985,23 +1031,23 @@ erasefunc_t *spi_get_erasefn_from_opcode_4ba(uint8_t opcode)
 	case 0xd7:
 	case 0xdb:
 		msg_cinfo("%s: erase opcode (0x%02x) doesn't have its 4-bytes addressing version."
-			  " Please report this at flashrom@flashrom.org\n", __func__, opcode);
+			" Please report this at flashrom@flashrom.org\n", __func__, opcode);
 		return NULL;
 	default:
 		msg_cinfo("%s: unknown erase opcode (0x%02x). Please report "
-			  "this at flashrom@flashrom.org\n", __func__, opcode);
+			"this at flashrom@flashrom.org\n", __func__, opcode);
 		return NULL;
 	}
 }
 
 /* Chooser for erase function by instruction opcode for block eraser instructions
-   which can be used from ANY mode (3-bytes or 4-bytes). This chooser is called
-   from sfdp.c during parse of SFDP 4-Bytes Address Instruction Table (JESD216B) */
+which can be used from ANY mode (3-bytes or 4-bytes). This chooser is called
+from sfdp.c during parse of SFDP 4-Bytes Address Instruction Table (JESD216B) */
 erasefunc_t *spi_get_erasefn_from_opcode_4ba_direct(uint8_t opcode)
 {
 	msg_trace("-> %s\n", __func__);
 
-	switch(opcode){
+	switch (opcode) {
 	case 0xff:
 	case 0x00:
 		/* Not specified, assuming "not supported". */
@@ -1014,7 +1060,7 @@ erasefunc_t *spi_get_erasefn_from_opcode_4ba_direct(uint8_t opcode)
 		return &spi_block_erase_dc_4ba_direct;			/* direct */
 	default:
 		msg_cinfo("%s: unknown erase opcode (0x%02x). Please report "
-			  "this at flashrom@flashrom.org\n", __func__, opcode);
+			"this at flashrom@flashrom.org\n", __func__, opcode);
 		return NULL;
 	}
 }
