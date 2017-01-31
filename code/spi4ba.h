@@ -26,8 +26,12 @@
 #ifndef __SPI_4BA_H__
 #define __SPI_4BA_H__ 1
 
+
+
+
+
 /* Enter 4-byte Address Mode */
-#define JEDEC_ENTER_4_BYTE_ADDR_MODE		0xB7
+#define JEDEC_ENTER_4_BYTE_ADDR_MODE		0xB7    
 #define JEDEC_ENTER_4_BYTE_ADDR_MODE_OUTSIZE	0x01
 #define JEDEC_ENTER_4_BYTE_ADDR_MODE_INSIZE	0x00
 
@@ -110,9 +114,15 @@ From ANY mode (3-bytes or 4-bytes) it works with 4-byte address */
 #define JEDEC_4BAIT_ERASE_TYPE_3_SUPPORT 		(1UL << 11)
 #define JEDEC_4BAIT_ERASE_TYPE_4_SUPPORT 		(1UL << 12)
 
+//DJSC
 /* enter 4-bytes addressing mode */
 int spi_enter_4ba_17(struct flashctx *flash);
 int spi_enter_4ba_17_we(struct flashctx *flash);
+//E DJSC
+
+
+
+/* enter 4-bytes addressing mode */
 int spi_enter_4ba_b7(struct flashctx *flash);
 int spi_enter_4ba_b7_we(struct flashctx *flash);
 

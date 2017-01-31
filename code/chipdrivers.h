@@ -196,8 +196,11 @@ int probe_en29lv640b(struct flashctx *flash);
 int write_en29lv640b(struct flashctx *flash, const uint8_t *buf, unsigned int start, unsigned int len);
 
 /* spi4ba.c */
+//DJSC
+/* enter 4-bytes addressing mode */
 int spi_enter_4ba_17(struct flashctx *flash);
 int spi_enter_4ba_17_we(struct flashctx *flash);
+//E DJSC
 int spi_enter_4ba_b7(struct flashctx *flash);
 int spi_enter_4ba_b7_we(struct flashctx *flash);
 int spi_byte_program_4ba(struct flashctx *flash, unsigned int addr, uint8_t databyte);

@@ -40,7 +40,7 @@
 /* Enter 4-bytes addressing mode (without sending WREN before) */
 int spi_enter_4ba_17(struct flashctx *flash)
 {
-	const unsigned char cmd[JEDEC_ENTER_4_BYTE_ADDR_MODE_OUTSIZE] = { JEDEC_ENTER_4_BYTE_ADDR_MODE };
+	const unsigned char cmd[JEDEC_ENTER_4_BYTE_ADDR_MODE_OUTSIZE_17] = { JEDEC_ENTER_4_BYTE_ADDR_MODE_17 };  //DJSC
 
 	msg_trace("-> %s\n", __func__);
 
@@ -215,6 +215,14 @@ int spi_nbyte_program_4ba(struct flashctx *flash, unsigned int addr,
 	}
 	return result;
 }
+//liliana uribe
+//SRE 
+
+//termino para presentar ofertas
+//Fecha de cotizacion
+//con calma 6 FEB
+//
+
 
 /* Read flash bytes from 4-bytes addressing mode */
 int spi_nbyte_read_4ba(struct flashctx *flash, unsigned int addr,

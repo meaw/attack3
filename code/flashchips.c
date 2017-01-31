@@ -9756,10 +9756,10 @@ const struct flashchip flashchips[] = {
 		| FEATURE_4BA_SUPPORT,
 	.four_bytes_addr_funcs =
 {
-	.enter_4ba = spi_enter_4ba_17, /* enter 4-bytes addressing mode by CMD B7 + WREN */
-	.read_nbyte = spi_nbyte_read_4ba, /* read , need to enter 4ba */
-	.program_byte = spi_byte_program_4ba, /* write from 4-bytes addressing mode */
-	.program_nbyte = spi_nbyte_program_4ba /* write from 4-bytes addressing mode */
+	//.enter_4ba = spi_enter_4ba_17, /* enter 4-bytes addressing mode by CMD B7 + WREN */
+	.read_nbyte = spi_nbyte_read_4ba_direct, /* read , need to enter 4ba */
+	.program_byte = spi_byte_program_4ba_direct, /* write from 4-bytes addressing mode */
+	.program_nbyte = spi_nbyte_program_4ba_direct /* write from 4-bytes addressing mode */
 },
 .tested = TEST_OK_PREW,
 .probe = probe_spi_rdid,
@@ -9768,7 +9768,7 @@ const struct flashchip flashchips[] = {
 {
 	{
 		.eraseblocks = { { 256 * 1024,256 } },
-		.block_erase = spi_block_erase_d8_4ba,
+		.block_erase = spi_block_erase_dc_4ba_direct,
 	}/*, {
 	 .eraseblocks = { {65536 * 1024, 1} },
 	 .block_erase = spi_block_erase_60_4ba,
