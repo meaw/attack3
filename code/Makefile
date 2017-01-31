@@ -514,7 +514,7 @@ endif
 CHIP_OBJS = jedec.o stm50.o w39.o w29ee011.o \
 	sst28sf040.o 82802ab.o \
 	sst49lfxxxc.o sst_fwhub.o flashchips.o spi.o spi25.o spi25_statusreg.o \
-	opaque.o sfdp.o en29lv640b.o at45db.o
+	spi4ba.o opaque.o sfdp.o en29lv640b.o at45db.o
 
 ###############################################################################
 # Library code.
@@ -529,7 +529,7 @@ CLI_OBJS = cli_classic.o cli_output.o cli_common.o print.o
 # Set the flashrom version string from the highest revision number of the checked out flashrom files.
 # Note to packagers: Any tree exported with "make export" or "make tarball"
 # will not require subversion. The downloadable snapshots are already exported.
-SVNVERSION := r1955
+SVNVERSION := $(shell ./util/getrevision.sh -u 2>/dev/null )
 
 RELEASE := 0.9.9
 VERSION := $(RELEASE)-$(SVNVERSION)
