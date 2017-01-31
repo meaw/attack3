@@ -175,6 +175,7 @@
     <ClCompile Include="spi.c" />
     <ClCompile Include="spi25.c" />
     <ClCompile Include="spi25_statusreg.c" />
+    <ClCompile Include="spi4ba.c" />
     <ClCompile Include="sst28sf040.c" />
     <ClCompile Include="sst49lfxxxc.c" />
     <ClCompile Include="sst_fwhub.c" />
@@ -197,6 +198,7 @@
     <ClInclude Include="programmer.h" />
     <ClInclude Include="serprog.h" />
     <ClInclude Include="spi.h" />
+    <ClInclude Include="spi4ba.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

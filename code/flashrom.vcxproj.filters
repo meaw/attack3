@@ -234,6 +234,9 @@
     <ClCompile Include="wbsio_spi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="spi4ba.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chipdrivers.h">
@@ -267,6 +270,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="spi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="spi4ba.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
